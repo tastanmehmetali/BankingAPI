@@ -1,83 +1,62 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>BankingAPI</groupId>
-  <artifactId>BankingAPI</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>Sunhill Developer Task</name>
-  <description>Banking API has a lot of sensitive cash operations happen every second.</description>
-  <developers>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>BankingAPI</groupId>
+	<artifactId>BankingAPI</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Sunhill Developer Task</name>
+	<description>Banking API has a lot of sensitive cash operations happen every second.</description>
+	<developers>
 		<developer>
 			<name>Mehmet Ali Taştan</name>
 		</developer>
 	</developers>
-	
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.1.RELEASE</version>
-	</parent>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<apache.commons>3.8.1</apache.commons>
-		<mapper.version>0.7.5</mapper.version>
-		<mockito.all.version>1.9.5</mockito.all.version>
-		<mockito.core.version>1.10.19</mockito.core.version>
-		<com.google.guava.guava.version>21.0</com.google.guava.guava.version>
+		<slf4j.version>1.7.25</slf4j.version>
 	</properties>
-  
- 
+
+
 	<dependencies>
-		<!-- Spring Dependencies -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<!-- //End Spring Dependencies -->
 
 		<!-- Apache dependency -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
+			<version>${apache.commons}</version>
 		</dependency>
 		<!-- //END Apache dependency -->
-		
-		<!-- Java Utilities from google -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${com.google.guava.guava.version}</version>
-		</dependency>
-		<!-- //END Java Utilities from google -->
 
-		<!-- Mockito-all -->
+		<!-- org.slf4j -->
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>${mockito.all.version}</version>
-			<scope>test</scope>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<!-- //END org.slf4j -->
+
+		<!-- junit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.4</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- //END Mockito-all -->
+		<!-- //END junit -->
 
 	</dependencies>
-  	<build>
+	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
@@ -91,9 +70,13 @@
 				</executions>
 				<configuration>
 					<argLine>-Duser.timezone=UTC</argLine>
+					<systemPropertyVariables>
+						<org.slf4j.simpleLogger.defaultLogLevel>DEBUG</org.slf4j.simpleLogger.defaultLogLevel>
+						<org.slf4j.simpleLogger.showDateTime>true</org.slf4j.simpleLogger.showDateTime>
+					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-  
+
 </project>
