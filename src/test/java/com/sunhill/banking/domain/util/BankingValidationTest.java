@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.sunhill.banking.domain.CheckingAccount;
-import com.sunhill.banking.domain.util.BankingValidation;
 import com.sunhill.banking.service.exception.BankingException;
 
 public class BankingValidationTest {
