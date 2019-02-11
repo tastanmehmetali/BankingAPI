@@ -9,75 +9,159 @@ import org.junit.Test;
 
 import com.sunhill.banking.domain.CheckingAccount;
 import com.sunhill.banking.domain.util.BankingValidation;
+import com.sunhill.banking.service.exception.BankingException;
 
 public class BankingValidationTest {
 
+	private static final String OWNER1 = "owner1";
+	private static final String OWNER2 = "owner2";
+
 	@Test
 	public void privateConstructorTest() throws Exception {
-	    Constructor<BankingValidation> validationConstructor = BankingValidation.class.getDeclaredConstructor();
-	    Assert.assertFalse(validationConstructor.isAccessible());
-	    validationConstructor.setAccessible(true);
-	    validationConstructor.newInstance((Object[]) null);
+		Constructor<BankingValidation> validationConstructor = BankingValidation.class.getDeclaredConstructor();
+		Assert.assertFalse(validationConstructor.isAccessible());
+		validationConstructor.setAccessible(true);
+		validationConstructor.newInstance((Object[]) null);
 	}
-	
+
 	@Test
 	public void shouldBeTestCheckAndReturnValueForGivenAttribute() {
-		BigDecimal checkedAttribute = BankingValidation.checkAndReturnValueForGivenAttribute(null);
-		Assert.assertEquals(BigDecimal.ZERO, checkedAttribute);
+		try {
+			BankingValidation.checkNullAndReturnValueForGivenAttribute(null);
+		} catch (Throwable expected) {
+			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue(),
+					expected.getLocalizedMessage());
+		}
 	}
-	
-	@Test
-	public void shouldBeTestCheckAndReturnValueForGivenAttributeIsNotNull() {
-		BigDecimal checkedAttribute = BankingValidation.checkAndReturnValueForGivenAttribute(BigDecimal.TEN);
-		Assert.assertEquals(BigDecimal.TEN, checkedAttribute);
-	}
-	
-	@Test
-	public void shouldBeTestGivenBothAccountsAreNull() {
-		boolean isSame = BankingValidation.isGivenAccountsAreNotSame(null, null);
-		Assert.assertFalse(isSame);
-	}
-	
+
 	@Test
 	public void shouldBeTestGivenFirstAccountIsNullOthersNotNull() {
-		boolean isSame = BankingValidation.isGivenAccountsAreNotSame(null, new CheckingAccount(StringUtils.EMPTY));
-		Assert.assertFalse(isSame);
+		try {
+			BankingValidation.isGivenAccountsAreNotSame(null, new CheckingAccount(StringUtils.EMPTY));
+		} catch (Throwable expected) {
+			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(BankingMessageUtil.OWNER_INFO_MUSS_NOT_BE_EMPTY.getValue(),
+					expected.getLocalizedMessage());
+		}
+
 	}
-	
+
 	@Test
-	public void shouldBeTestGivenSecondAccountIsNullOthersNotNull() {
-		boolean isSame = BankingValidation.isGivenAccountsAreNotSame(new CheckingAccount(StringUtils.EMPTY), null);
-		Assert.assertFalse(isSame);
+	public void shouldBeTestGivenSecondAccountIsNullOtherIsNull() {
+		try {
+			BankingValidation.isGivenAccountsAreNotSame(new CheckingAccount(StringUtils.EMPTY), null);
+		} catch (Throwable expected) {
+			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(BankingMessageUtil.OWNER_INFO_MUSS_NOT_BE_EMPTY.getValue(),
+					expected.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	public void shouldBeTestGivenFirstAccountIsNullOthersNotEmpty() {
+		try {
+			BankingValidation.isGivenAccountsAreNotSame(null, new CheckingAccount(OWNER1));
+		} catch (Throwable expected) {
+			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(BankingMessageUtil.GIVEN_ACCOUNT_MUST_NOT_BE_NULL.getValue(),
+					expected.getLocalizedMessage());
+		}
+
+	}
+
+	@Test
+	public void shouldBeTestGivenSecondAccountIsNullOtherIsNotEmpty() {
+		try {
+			BankingValidation.isGivenAccountsAreNotSame(new CheckingAccount(OWNER1), null);
+		} catch (Throwable expected) {
+			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(BankingMessageUtil.GIVEN_ACCOUNT_MUST_NOT_BE_NULL.getValue(),
+					expected.getLocalizedMessage());
+		}
 	}
 
 	@Test
 	public void shouldBeTestGivenBothAccountsAreNotNullAndSameValue() {
-		boolean isSame = BankingValidation.isGivenAccountsAreNotSame(new CheckingAccount(StringUtils.EMPTY), new CheckingAccount(StringUtils.EMPTY));
-		Assert.assertFalse(isSame);
+		boolean isNotSame = BankingValidation.isGivenAccountsAreNotSame(new CheckingAccount(OWNER1), new CheckingAccount(OWNER1));
+		Assert.assertFalse(isNotSame);
 	}
 
 	@Test
 	public void shouldBeTestGivenBothAccountsAreNotNullAndDifferent() {
-		boolean isSame = BankingValidation.isGivenAccountsAreNotSame(new CheckingAccount(StringUtils.EMPTY), new CheckingAccount("owner"));
-		Assert.assertTrue(isSame);
+		boolean isNotSame = BankingValidation.isGivenAccountsAreNotSame(new CheckingAccount(OWNER1),
+				new CheckingAccount(OWNER2));
+		Assert.assertTrue(isNotSame);
 	}
-	
+
 	@Test
 	public void shouldBeTestGivenAmountNull() {
-		BigDecimal amount = BankingValidation.calculateGivenAmountGraterThanEqualZero(null);
-		Assert.assertEquals(BigDecimal.ZERO, amount);
+		try {
+			BankingValidation.calculateGivenAmountGraterThanEqualZero(null);
+		} catch (Throwable expected) {
+			Assert.assertEquals(NullPointerException.class, expected.getClass());
+		}
 	}
-	
+
 	@Test
 	public void shouldBeTestGivenAmountZero() {
-		BigDecimal amount = BankingValidation.calculateGivenAmountGraterThanEqualZero(BigDecimal.ZERO);
-		Assert.assertEquals(BigDecimal.ZERO, amount);
+		BigDecimal calculatedResult = BankingValidation.calculateGivenAmountGraterThanEqualZero(BigDecimal.ZERO);
+		Assert.assertEquals(BigDecimal.ZERO, calculatedResult);
 	}
-	
+
 	@Test
 	public void shouldBeTestGivenAmountTen() {
 		BigDecimal amount = BankingValidation.calculateGivenAmountGraterThanEqualZero(BigDecimal.TEN);
 		Assert.assertEquals(BigDecimal.TEN, amount);
 	}
-	
+
+	@Test
+	public void shouldBeTestCheckAndReturnValueForGivenAttributeIsNotNull() {
+		BigDecimal checkedAttribute = BankingValidation.checkNullAndReturnValueForGivenAttribute(BigDecimal.TEN);
+		Assert.assertEquals(BigDecimal.TEN, checkedAttribute);
+	}
+
+	@Test
+	public void shouldBeTestGivenBothAccountsAreNull() {
+		try {
+			boolean isNotSame = BankingValidation.isGivenAccountsAreNotSame(null, null);
+			Assert.assertFalse(isNotSame);
+		} catch (Throwable expected) {
+			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(BankingMessageUtil.GIVEN_ACCOUNT_MUST_NOT_BE_NULL.getValue(),
+					expected.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	public void shouldBeTestGivenOneOfThemIsNullOtherIsNotNull() {
+		try {
+			boolean isNotSame = BankingValidation.isGivenAccountsAreNotSame(null, new CheckingAccount(OWNER1));
+			Assert.assertFalse(isNotSame);
+		} catch (Throwable expected) {
+			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(BankingMessageUtil.GIVEN_ACCOUNT_MUST_NOT_BE_NULL.getValue(),
+					expected.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	public void shouldBeTestGivenOneOfThemIsNullOtherIsNotNullVersion2() {
+		try {
+			boolean isNotSame = BankingValidation.isGivenAccountsAreNotSame(new CheckingAccount(OWNER1), null);
+			Assert.assertFalse(isNotSame);
+		} catch (Throwable expected) {
+			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(BankingMessageUtil.GIVEN_ACCOUNT_MUST_NOT_BE_NULL.getValue(),
+					expected.getLocalizedMessage());
+		}
+	}
+
+	@Test
+	public void shouldBeTestGivenBothAreNotSame() {
+		boolean isNotSame = BankingValidation.isGivenAccountsAreNotSame(new CheckingAccount(OWNER1),
+				new CheckingAccount(OWNER2));
+		Assert.assertTrue(isNotSame);
+	}
+
 }

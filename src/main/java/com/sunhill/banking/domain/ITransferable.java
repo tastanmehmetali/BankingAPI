@@ -11,7 +11,6 @@ public interface ITransferable {
 	 * 
 	 * @param account type of checkingAccount
 	 * @param amount
-	 * @return
 	 */
-	public boolean transfer(CheckingAccount account, BigDecimal amount);
+	public void transfer(CheckingAccount account, BigDecimal amount);
 }

@@ -16,16 +16,16 @@ public class CheckingAccount extends Account implements ITransferable {
 	private BigDecimal overDraftLimit;
 
 	public CheckingAccount(final String owner) {
-		super(owner, null);
+		super(owner, BigDecimal.ZERO);
 		overDraftLimit = new BigDecimal(OVER_DRAFT_LIMIT_DEFAULT_VALUE);
-		logger.debug("CheckingAccount: Created owner {} with balance {} and  overdraft {}", owner, getBalance(),
+		logger.debug("CheckingAccount: Created owner: {} with balance: {} and  overdraft: {}", owner, getBalance(),
 				overDraftLimit);
 	}
 
 	public CheckingAccount(final String owner, final BigDecimal balance) {
 		super(owner, balance);
 		overDraftLimit = new BigDecimal(OVER_DRAFT_LIMIT_DEFAULT_VALUE);
-		logger.debug("CheckingAccount: Created owner {} with balance {} and  overdraft {}", owner, getBalance(),
+		logger.debug("CheckingAccount: Created owner: {} with balance: {} and  overdraft: {}", owner, getBalance(),
 				overDraftLimit);
 	}
 
@@ -34,43 +34,43 @@ public class CheckingAccount extends Account implements ITransferable {
 	}
 
 	public void setOverDraftLimit(BigDecimal overDraftLimit) {
-		if (overDraftLimit == null || overDraftLimit.compareTo(BigDecimal.ZERO) > -1)
-			overDraftLimit = new BigDecimal(OVER_DRAFT_LIMIT_DEFAULT_VALUE);
+		if(overDraftLimit == null)
+			throw new NullPointerException(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue());
+		
+		if(overDraftLimit.compareTo(BigDecimal.ZERO) > 0)
+			throw new BankingException(BankingMessageUtil.GIVEN_OVERDRAFT_MUST_NOT_BE_GREATER_THAN_ZERO.getValue());
+
 		this.overDraftLimit = overDraftLimit;
 	}
 
 	@Override
-	public synchronized boolean withdraw(BigDecimal amount) {
+	public synchronized void withdraw(BigDecimal amount) {
 		logger.debug("withdraw --- amount: {}", amount);
 		amount = BankingValidation.calculateGivenAmountGraterThanEqualZero(amount);
-		return calculateWithdraw(amount);
+		calculateWithdraw(amount);
 	}
 
-	private boolean calculateWithdraw(final BigDecimal amount) {
+	private void calculateWithdraw(final BigDecimal amount) {
 		BigDecimal remainBalance = getBalance().subtract(amount);
-		if (remainBalance.compareTo(getOverDraftLimit()) > -1) {
-			setBalance(remainBalance);
-			return true;
+		if (remainBalance.compareTo(getOverDraftLimit()) < 0) {
+			throw new BankingException(BankingMessageUtil.WANTS_TO_WITHDRAW_AMOUNT_MUST_NOT_BE_LESS_THAN_OVERDRAFT.getValue());
 		}
 
-		return false;
+		setBalance(remainBalance);
 	}
 
 	@Override
-	public boolean transfer(final CheckingAccount account, BigDecimal amount) {
+	public void transfer(final CheckingAccount account, BigDecimal amount) {
 		logger.debug("transfer --- amount: {}", amount);
 		if(account == null)
-			throw new BankingException(BankingMessageUtil.TRANSFERED_ACCOUNT_CAN_NOT_NULL.getValue());
+			throw new BankingException(BankingMessageUtil.TRANSFERED_ACCOUNT_MUST_NOT_NULL.getValue());
 		
 		if(getOwner().equals(account.getOwner()))
-			throw new BankingException("Given accounts are same!");
+			throw new BankingException(BankingMessageUtil.GIVEN_ACCOUNTS_ARE_SAME.getValue());
 		
 		amount = BankingValidation.calculateGivenAmountGraterThanEqualZero(amount);
-		if(withdraw(amount)) {
-			account.deposit(amount);
-			return true;
-		}
-		return false;
+		withdraw(amount);
+		account.deposit(amount);
 	}
 	
 }

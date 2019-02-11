@@ -1,5 +1,5 @@
 package com.sunhill.banking.domain;
 
 public interface ICalculateInterest {
-	void payInterest();
+	void payInterest(int termInYears);
 }

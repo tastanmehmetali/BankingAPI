@@ -3,5 +3,11 @@ package com.sunhill.banking.domain;
 import java.math.BigDecimal;
 
 public interface IWithdrawable {
-	public boolean withdraw(BigDecimal amount);
+	
+	/**
+	 * to reduce given amount from the balance
+	 * 
+	 * @param amount
+	 */
+	public void withdraw(BigDecimal amount);
 }
