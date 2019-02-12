@@ -1,5 +1,12 @@
 package com.sunhill.banking.domain.util;
 
+/**
+ * 
+ * @author mehmetali
+ *
+ * to define a message for banking process
+ *
+ */
 public enum BankingMessageUtil {
 
 	OWNER_INFO("Owner (Name) can not be null!"),

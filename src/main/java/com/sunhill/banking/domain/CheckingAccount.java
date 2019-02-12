@@ -9,12 +9,25 @@ import com.sunhill.banking.domain.util.BankingMessageUtil;
 import com.sunhill.banking.domain.util.BankingValidation;
 import com.sunhill.banking.service.exception.BankingException;
 
+/**
+ * 
+ * @author mehmetali
+ *
+ * CheckingAccount has extra features that transfer and overdraft.
+ * it is a different account type.
+ * 
+ */
 public class CheckingAccount extends Account implements ITransferable {
 
 	private static final Logger logger = LoggerFactory.getLogger(CheckingAccount.class);
 	protected static final int OVER_DRAFT_LIMIT_DEFAULT_VALUE = -1000;
 	private BigDecimal overDraftLimit;
 
+	/**
+	 * create CheckingAccount with overdraft (default value: -1000)
+	 * 
+	 * @param owner
+	 */
 	public CheckingAccount(final String owner) {
 		super(owner, BigDecimal.ZERO);
 		overDraftLimit = new BigDecimal(OVER_DRAFT_LIMIT_DEFAULT_VALUE);
@@ -22,6 +35,14 @@ public class CheckingAccount extends Account implements ITransferable {
 				overDraftLimit);
 	}
 
+	/**
+	 * create CheckingAccount with overdraft (default value: -1000)
+	 * balance is initial value
+	 * 
+	 * @param owner
+	 * @param balance
+	 * 
+	 */
 	public CheckingAccount(final String owner, final BigDecimal balance) {
 		super(owner, balance);
 		overDraftLimit = new BigDecimal(OVER_DRAFT_LIMIT_DEFAULT_VALUE);
@@ -29,10 +50,22 @@ public class CheckingAccount extends Account implements ITransferable {
 				overDraftLimit);
 	}
 
+	/**
+	 * 
+	 * to get overdraft value
+	 * 
+	 * @return BigDecimal
+	 */
 	public BigDecimal getOverDraftLimit() {
 		return overDraftLimit;
 	}
 
+	/**
+	 * 
+	 * to set overdraft value
+	 * 
+	 * @param overDraftLimit
+	 */
 	public void setOverDraftLimit(BigDecimal overDraftLimit) {
 		if(overDraftLimit == null)
 			throw new NullPointerException(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue());
@@ -43,6 +76,13 @@ public class CheckingAccount extends Account implements ITransferable {
 		this.overDraftLimit = overDraftLimit;
 	}
 
+	/**
+	 * 
+	 * given amount to withdraw from the balance
+	 * 
+	 * @param amount
+	 * 
+	 */
 	@Override
 	public synchronized void withdraw(BigDecimal amount) {
 		logger.debug("withdraw --- amount: {}", amount);
@@ -59,6 +99,15 @@ public class CheckingAccount extends Account implements ITransferable {
 		setBalance(remainBalance);
 	}
 
+	/**
+	 * 
+	 * given account, is CheckingAccount, to deposit money
+	 * given amount to be transferred value
+	 * 
+	 * @param account
+	 * @param amount
+	 * 
+	 */
 	@Override
 	public void transfer(final CheckingAccount account, BigDecimal amount) {
 		logger.debug("transfer --- amount: {}", amount);

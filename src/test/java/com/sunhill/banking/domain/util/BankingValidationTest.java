@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import com.sunhill.banking.domain.CheckingAccount;
 import com.sunhill.banking.service.exception.BankingException;
+import com.sunhill.banking.service.exception.InvalidAmountException;
+import com.sunhill.banking.service.exception.InvalidOwnerException;
 
 public class BankingValidationTest {
 
@@ -28,7 +30,7 @@ public class BankingValidationTest {
 		try {
 			BankingValidation.checkNullAndReturnValueForGivenAttribute(null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidAmountException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -39,7 +41,7 @@ public class BankingValidationTest {
 		try {
 			BankingValidation.isGivenAccountsAreNotSame(null, new CheckingAccount(StringUtils.EMPTY));
 		} catch (Throwable expected) {
-			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(InvalidOwnerException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.OWNER_INFO_MUSS_NOT_BE_EMPTY.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -51,7 +53,7 @@ public class BankingValidationTest {
 		try {
 			BankingValidation.isGivenAccountsAreNotSame(new CheckingAccount(StringUtils.EMPTY), null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(InvalidOwnerException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.OWNER_INFO_MUSS_NOT_BE_EMPTY.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -98,7 +100,7 @@ public class BankingValidationTest {
 		try {
 			BankingValidation.calculateGivenAmountGraterThanEqualZero(null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidAmountException.class, expected.getClass());
 		}
 	}
 

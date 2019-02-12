@@ -10,19 +10,35 @@ import org.slf4j.LoggerFactory;
 import com.sunhill.banking.domain.util.BankingMessageUtil;
 import com.sunhill.banking.domain.util.BankingValidation;
 import com.sunhill.banking.service.exception.BankingException;
+import com.sunhill.banking.service.exception.InvalidOwnerException;
 
+/**
+ * 
+ * @author mehmetali
+ *
+ * Each account has depositable and withdrawable features. 
+ * Additionally, to get account info
+ * 
+ */
 public abstract class Account implements IDepositable, IWithdrawable {
 
 	private static final Logger logger = LoggerFactory.getLogger(Account.class);
 	private String owner;
 	private BigDecimal balance;
 
+	/**
+	 * 
+	 * owner is account name and balance is account balance.
+	 * 
+	 * @param owner
+	 * @param balance
+	 */
 	public Account(final String owner, final BigDecimal balance) {
 		if(owner == null)
-			throw new NullPointerException(BankingMessageUtil.OWNER_INFO.getValue());
+			throw new InvalidOwnerException(BankingMessageUtil.OWNER_INFO.getValue());
 		
 		if(StringUtils.EMPTY.equals(owner))
-			throw new BankingException(BankingMessageUtil.OWNER_INFO_MUSS_NOT_BE_EMPTY.getValue());
+			throw new InvalidOwnerException(BankingMessageUtil.OWNER_INFO_MUSS_NOT_BE_EMPTY.getValue());
 		
 		this.owner = owner;
 		this.balance = BankingValidation.calculateGivenAmountGraterThanEqualZero(balance);
@@ -45,6 +61,13 @@ public abstract class Account implements IDepositable, IWithdrawable {
 		this.balance = balanceOptional.get();
 	}
 
+	/**
+	 * 
+	 * given amount is added the balance
+	 * 
+	 * @param amount
+	 * 
+	 */
 	@Override
 	public synchronized void deposit(BigDecimal amount) {
 		logger.debug("deposit --- amount: {}", amount);

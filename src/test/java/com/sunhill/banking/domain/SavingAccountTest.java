@@ -14,6 +14,8 @@ import org.junit.Test;
 
 import com.sunhill.banking.domain.util.BankingMessageUtil;
 import com.sunhill.banking.service.exception.BankingException;
+import com.sunhill.banking.service.exception.InvalidAmountException;
+import com.sunhill.banking.service.exception.InvalidOwnerException;
 
 public class SavingAccountTest {
 
@@ -24,7 +26,7 @@ public class SavingAccountTest {
 		try {
 			new SavingAccount(null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidOwnerException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.OWNER_INFO.getValue(), expected.getLocalizedMessage());
 		}
 	}
@@ -34,7 +36,7 @@ public class SavingAccountTest {
 		try {
 			new SavingAccount(null, null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidOwnerException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.OWNER_INFO.getValue(), expected.getLocalizedMessage());
 		}
 	}
@@ -42,9 +44,9 @@ public class SavingAccountTest {
 	@Test
 	public void shouldBeTestSavingAccountWhenOwnerIsEmptyOnlyOneParameter() {
 		try {
-			SavingAccount savingAccount = new SavingAccount(StringUtils.EMPTY);
+			new SavingAccount(StringUtils.EMPTY);
 		} catch (Throwable expected) {
-			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(InvalidOwnerException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.OWNER_INFO_MUSS_NOT_BE_EMPTY.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -60,9 +62,9 @@ public class SavingAccountTest {
 	@Test
 	public void shouldBeTestSavingAccountWhenOwnerIsEmpty() {
 		try {
-			SavingAccount savingAccount = new SavingAccount(StringUtils.EMPTY, null);
+			new SavingAccount(StringUtils.EMPTY, null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(InvalidOwnerException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.OWNER_INFO_MUSS_NOT_BE_EMPTY.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -71,9 +73,9 @@ public class SavingAccountTest {
 	@Test
 	public void shouldBeTestSavingAccountWhenBalanceIsNull() {
 		try {
-			SavingAccount savingAccount = new SavingAccount(OWNER, null);
+			new SavingAccount(OWNER, null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidAmountException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -256,7 +258,7 @@ public class SavingAccountTest {
 			SavingAccount savingAccount = new SavingAccount(OWNER, givenBalance);
 			savingAccount.deposit(null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidAmountException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -277,7 +279,7 @@ public class SavingAccountTest {
 			SavingAccount savingAccount = new SavingAccount(OWNER, BigDecimal.TEN);
 			savingAccount.withdraw(null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidAmountException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue(),
 					expected.getLocalizedMessage());
 		}

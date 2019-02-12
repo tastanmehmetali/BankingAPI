@@ -11,12 +11,26 @@ import com.sunhill.banking.domain.util.BankingMessageUtil;
 import com.sunhill.banking.domain.util.BankingValidation;
 import com.sunhill.banking.service.exception.BankingException;
 
+/**
+ * 
+ * @author mehmetali
+ *
+ * SavingAccount has extra features that calculate payInterest.
+ * it is a different account type.
+ * 
+ */
 public class SavingAccount extends Account implements ICalculateInterest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SavingAccount.class);
 	protected static final double INTEREST_RATE_DEFAULT_VALUE_YEARLY = 0.02; // 2% yearly
 	private BigDecimal interestRate;
 	
+	/**
+	 * 
+	 * create SavingAccount with interest rate (default 0.02), it is yearly
+	 * 
+	 * @param owner
+	 */
 	public SavingAccount(String owner) {
 		super(owner, BigDecimal.ZERO);
 		interestRate = BigDecimal.valueOf(INTEREST_RATE_DEFAULT_VALUE_YEARLY);
@@ -24,6 +38,15 @@ public class SavingAccount extends Account implements ICalculateInterest {
 				interestRate);
 	}
 	
+	/**
+	 * 
+	 * create SavingAccount with interest rate (default 0.02), it is yearly
+	 * balance is initial value
+	 * 
+	 * @param owner
+	 * @param balance
+	 * 
+	 */
 	public SavingAccount(String owner, BigDecimal balance) {
 		super(owner, balance);
 		interestRate = BigDecimal.valueOf(INTEREST_RATE_DEFAULT_VALUE_YEARLY);
@@ -31,10 +54,21 @@ public class SavingAccount extends Account implements ICalculateInterest {
 				interestRate);
 	}
 	
+	/**
+	 * to get an interest rate yearly
+	 * 
+	 * @return BigDecimal
+	 */
 	public BigDecimal getInterestRate() {
 		return interestRate;
 	}
 	
+	/**
+	 * 
+	 * to set given interest rate, also changed logic according to yearly
+	 * 
+	 * @param interestRate
+	 */
 	public void setInterestRate(BigDecimal interestRate) {
 		if(interestRate == null)
 			throw new NullPointerException(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue());
@@ -47,6 +81,13 @@ public class SavingAccount extends Account implements ICalculateInterest {
 		this.interestRate = interestRate.divide(BigDecimal.valueOf(100));
 	}
 
+	/**
+	 * 
+	 * given amount to withdraw from the balance
+	 * 
+	 * @param amount
+	 * 
+	 */
 	@Override
 	public synchronized void withdraw(BigDecimal amount) {
 		amount = BankingValidation.calculateGivenAmountGraterThanEqualZero(amount);
@@ -69,6 +110,13 @@ public class SavingAccount extends Account implements ICalculateInterest {
 		return calculatedValue.subtract(getBalance());
 	}
 
+	/**
+	 * 
+	 * to calculate given parametre, refered to months.
+	 * 
+	 * @param termInYears
+	 * 
+	 */
 	@Override
 	public synchronized void payInterest(int termInYears) {
 		BigDecimal calculatedBalance = calculateInterestGain(termInYears);

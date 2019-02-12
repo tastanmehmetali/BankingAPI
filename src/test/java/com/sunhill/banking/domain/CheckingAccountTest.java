@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import com.sunhill.banking.domain.util.BankingMessageUtil;
 import com.sunhill.banking.service.exception.BankingException;
+import com.sunhill.banking.service.exception.InvalidAmountException;
+import com.sunhill.banking.service.exception.InvalidOwnerException;
 
 public class CheckingAccountTest {
 
@@ -26,7 +28,7 @@ public class CheckingAccountTest {
 		try {
 			new CheckingAccount(null, null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidOwnerException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.OWNER_INFO.getValue(), expected.getLocalizedMessage());
 		}
 	}
@@ -36,7 +38,7 @@ public class CheckingAccountTest {
 		try {
 			new CheckingAccount(null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidOwnerException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.OWNER_INFO.getValue(), expected.getLocalizedMessage());
 		}
 	}
@@ -46,7 +48,7 @@ public class CheckingAccountTest {
 		try {
 			new CheckingAccount(StringUtils.EMPTY);
 		} catch (Throwable expected) {
-			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(InvalidOwnerException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.OWNER_INFO_MUSS_NOT_BE_EMPTY.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -57,7 +59,7 @@ public class CheckingAccountTest {
 		try {
 			new CheckingAccount(StringUtils.EMPTY, null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(BankingException.class, expected.getClass());
+			Assert.assertEquals(InvalidOwnerException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.OWNER_INFO_MUSS_NOT_BE_EMPTY.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -147,7 +149,7 @@ public class CheckingAccountTest {
 			CheckingAccount checkingAccount = new CheckingAccount(OWNER1, givenBalance);
 			checkingAccount.deposit(null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidAmountException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -181,7 +183,7 @@ public class CheckingAccountTest {
 			CheckingAccount checkingAccount = new CheckingAccount(OWNER1, BigDecimal.TEN);
 			checkingAccount.withdraw(null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidAmountException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue(),
 					expected.getLocalizedMessage());
 		}
@@ -273,7 +275,7 @@ public class CheckingAccountTest {
 			CheckingAccount duplicatedAccount = new CheckingAccount(OWNER2, BigDecimal.ONE);
 			checkingAccount.transfer(duplicatedAccount, null);
 		} catch (Throwable expected) {
-			Assert.assertEquals(NullPointerException.class, expected.getClass());
+			Assert.assertEquals(InvalidAmountException.class, expected.getClass());
 			Assert.assertEquals(BankingMessageUtil.GIVEN_AMOUNT_MUST_NOT_BE_NULL.getValue(),
 					expected.getLocalizedMessage());
 		}
