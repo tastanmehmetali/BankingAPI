@@ -95,7 +95,7 @@ java -jar target/BankingAPI-0.0.1-SNAPSHOT.jar
 
 ## What's changed
 
-- Spring is not use
+- Spring is removed
 - to validate more inputs
 - to handle more cases
 	- different custom exception
@@ -107,4 +107,4 @@ java -jar target/BankingAPI-0.0.1-SNAPSHOT.jar
 
 The application is developed  **_DDD_**  (Domain Driven Design)  for implementation. 
 Domain objects are the central part of the application and the application is developed and tested in isolation from its eventual run-time devices and databases. The logic of the application is located the service layer based on domain objects and used interfaces for loose coupling etc. 
-Additionally, developing it used  **_TDD culture_  (Test Driven Development)**. Red, Green, and Refactor is the main approach to focus into three phases.
+Additionally, whem developing, it used  **_TDD culture_  (Test Driven Development)**. Red, Green, and Refactor is the main approach to focus into three phases.
