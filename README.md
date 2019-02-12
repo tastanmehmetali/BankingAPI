@@ -87,12 +87,6 @@ Using JUnit for testing:
 
 > **mvn clean install**
 
-All tests should be run and pass after the project should be build. Then run:
-
-```
-java -jar target/BankingAPI-0.0.1-SNAPSHOT.jar
-```
-
 ## What's changed
 
 - Spring is removed
