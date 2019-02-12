@@ -1,19 +1,75 @@
+
 # Welcome to BankingAPI
 
 This application contains features that are the skeleton of the bank api. The API has been tried to be constructed for intensive use and high sensitivity.
 Initially, it contains 2 different types of accounts; checkingAccount and SavingAccount (Extendable). Each account has an owner and a balance.
 
 Inculded Features:
-- deposit
-- withdraw
-- transfer
+
+ - deposit
+	- to add given amount the balance
+	- ex:
+	```
+	CheckingAccount account = new CheckingAccount("owner1", BigDecimal.TEN);
+	// created account balance is 10
+	account.getBalance(); // return 10
+
+	// to add 1
+	account.deposit(BigDecimal.ONE); // 10 + 1
+	account.getBalance(); // return 11
+	```
+ - withdraw
+	- to reduce given amount from the balance
+	- ex:
+	```
+	SavingAccount account = new SavingAccount("owner2", BigDecimal.TEN);
+	// created account balance is 10
+	account.getBalance(); // return 10
+
+	// to reduce 1
+	account.withdraw(BigDecimal.ONE); // 10 - 1
+	account.getBalance(); // return 9
+	```
+ - transfer
+	- to transfer the given owner, has to be valid (CheckingAccount) owner and the given amount to be transferred value.
+	- to do cash transfers between checking accounts
+	- ex:
+	```
+	CheckingAccount fromAccount = new CheckingAccount("owner1", BigDecimal.TEN);
+	CheckingAccount toAccount = new CheckingAccount("owner3", BigDecimal.ZERO);
+	// created account balance is 10
+	fromAccount.getBalance(); // return 10
+	toAccount.getBalance(); // return 0
+
+	fromAccount.transfer(toAccount, BigDecimal.ONE); // transfer process
+	fromAccount.getBalance(); // return 9
+	toAccount.getBalance(); // return 1
+	```
+ - payInterest
+	- to calculate with given periods (month) for interest rate and to add result the balance.    
+	- ex:
+	```
+	SavingAccount account = new SavingAccount("owner4", BigDecimal.TEN);
+	// created account balance is 10
+	account.getBalance(); // return 10
+	account.getInterestRate(); // return 0.02 (default value)
+	
+	// to calculate interest rate
+	account.payInterest(2);
+	account.getBalance(); // return 10.03
+	```
+Others;
+
+ - overDraftLimit; to give extra limit
 
 # Building & Running
 
-If you have an IDE, firstly import maven project and run:
+If you have an IDE, firstly install java then import maven project:
 
-> **spring-boot:run**
-
+- to import project
+	> **existing maven project**
+- to use as a library
+	> **import as an external library**
 
 On the root of the project, run:
 
@@ -27,10 +83,6 @@ Using JUnit for testing:
 
 > **mvn clean test**
 
-### Integration tests
-
-> **mvn clean verify**
-
 ### Build
 
 > **mvn clean install**
@@ -41,31 +93,18 @@ All tests should be run and pass after the project should be build. Then run:
 java -jar target/BankingAPI-0.0.1-SNAPSHOT.jar
 ```
 
-## Endpoints
+## What's changed
 
-The application will be running on localhost:8080 (**<host>**) and the following endpoints will be available:
-
-|                |ASCII                          |HTML                         |
-|----------------|-------------------------------|-----------------------------|
-|info			 |`'<host>/account/info/{owner}'`            |owner info            |
-|deposit         |`"<host>/account/deposit/{owner}/{amount}"`|to deposit for given owner using amount            |
-|withdraw        |`<host>/account/withdraw/{owner}/{amount} `|to withdraw for given owner using amount|
-|transfer		 |`<host>/account/transfer/{fromOwner}/{toOwner}/{amount}`|to transfer for given first owner to second owner using given amount|
+- Spring is not use
+- to validate more inputs
+- to handle more cases
+	- different custom exception
+- changed/fixed method logic
 
 ## Architectural Design and Decisions
 
 ### Architecture Used
 
-The application is developed  **_DDD_  (Domain Driven Design)**  and  **Hexagonal Architecture**  for implementation. Domain objects are the central part of the application and the application is developed and tested in isolation from its eventual run-time devices and databases. Logic of the application is located the service layer that based on domain objects and using interfaces for loose coupling etc. Also, the infrastructure layer has implemented what it needs. It gives external connections. Developing it used  **_TDD culture_  (Test Driven Development)**.
-
-### Endpoints
-
-REST service for any clients (_Mobile_,  _Web_  or external app as like  _postman_  etc.)
-
-### Application
-
-SpringBoot, a famous and commonly used framework , is used to develop for the application. SpringBoot has a lot of advantages as like embeded tomcat (not need to download tomcat) etc.
-
-### Storage
-
-The decision is an in-Memory ConcurrentHashMap for storage. (ConcurrentHashMap has <key, value> pair. Also, key is given id and value is given data.) The assignment is focused how to scale more easily and get more performance. Decided architecture (an Hexagonal Architecture) gives flexibility to choose or change the storage structure.
+The application is developed  **_DDD_**  (Domain Driven Design)  for implementation. 
+Domain objects are the central part of the application and the application is developed and tested in isolation from its eventual run-time devices and databases. The logic of the application is located the service layer based on domain objects and used interfaces for loose coupling etc. 
+Additionally, developing it used  **_TDD culture_  (Test Driven Development)**. Red, Green, and Refactor is the main approach to focus into three phases.
