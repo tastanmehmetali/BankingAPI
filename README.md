@@ -46,7 +46,7 @@ Inculded Features:
 	toAccount.getBalance(); // return 1
 	```
  - payInterest
-	- to calculate with given periods (month) for interest rate and to add result the balance.    
+	- to calculate with given periods (month) for interest rate and to add result the balance. (compound interest method)   
 	- ex:
 	```
 	SavingAccount account = new SavingAccount("owner4", BigDecimal.TEN);

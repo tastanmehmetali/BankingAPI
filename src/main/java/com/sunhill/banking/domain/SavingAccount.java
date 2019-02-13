@@ -111,7 +111,7 @@ public class SavingAccount extends Account implements ICalculateInterest {
 
 	/**
 	 * 
-	 * to calculate given parametre, refered to months.
+	 * to calculate given parametre, refered to months. [compound interest method]
 	 * 
 	 * @param termInYears
 	 * 
