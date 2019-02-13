@@ -16,7 +16,6 @@ import com.sunhill.banking.service.exception.BankingException;
  * @author mehmetali
  *
  * SavingAccount has extra features that calculate payInterest.
- * it is a different account type.
  * 
  */
 public class SavingAccount extends Account implements ICalculateInterest {

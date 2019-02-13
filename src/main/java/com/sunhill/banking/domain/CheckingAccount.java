@@ -14,7 +14,6 @@ import com.sunhill.banking.service.exception.BankingException;
  * @author mehmetali
  *
  * CheckingAccount has extra features that transfer and overdraft.
- * it is a different account type.
  * 
  */
 public class CheckingAccount extends Account implements ITransferable {
